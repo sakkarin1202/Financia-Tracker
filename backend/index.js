@@ -1,11 +1,10 @@
 const express = require("express");
 const app = express();
-const financialRouter = require("./routers/financial.router")
+const financialRouter = require("./routers/financial.router");
 require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 const router = require("./routers/financial.router");
-
 
 // CORS options
 const corsOptions = {
@@ -21,10 +20,9 @@ app.get("/", (req, res) => {
   res.send("<h1>Financial Tracker API</h1>"); // Added closing </h1> tag
 });
 
-
 //Use router
-app.use("/api/vi/financial", financialRouter);
+app.use("/api/v1/financial", financialRouter);
 
 app.listen(PORT, () => {
-  console.log( "Listening to http://localhost:" + PORT);
+  console.log("Listening to http://localhost:" + PORT);
 });
