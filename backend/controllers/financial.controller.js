@@ -50,7 +50,7 @@ exports.findAllByUserId = async (req, res) => {
           .send({ message: `No records found for userId: ${userId}` }); 
       }
     })
-    .catch((error) => {
+    .catch((error) => { 
       res.status(500).send({
         message:
           error.message ||
@@ -58,6 +58,7 @@ exports.findAllByUserId = async (req, res) => {
       });
     });
 };
+
 
 // Update Financial records
 exports.update = (req, res) => {
@@ -94,6 +95,21 @@ exports.delete = async (req, res) => {
       message:
         error.message ||
         "Some error occurred while deleting the financial record",
+    });
+  }
+};
+exports.getFinancialRecordById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const data = await Financial.findByPk(id);
+    if (data) {
+      res.send(data);
+    } else {
+      res.status(404).send({ message: `No record found with id: ${id}` });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || "Some error occurred while retrieving the record",
     });
   }
 };

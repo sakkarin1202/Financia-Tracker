@@ -1,6 +1,5 @@
 import api from "./api";
 const FINANCIAL_API_URL = import.meta.env.VITE_FINANCIAL_API_URL;
-
 // Get all financial records
 const getAllFinancialRecords = async () => {
   return await api.get(`${FINANCIAL_API_URL}`);
@@ -10,6 +9,7 @@ const getAllFinancialRecords = async () => {
 const getAllFinancialRecordsByUserId = async (userId) => {
   return await api.get(`${FINANCIAL_API_URL}/user/${userId}`);
 };
+
 
 // Get a financial record by id
 const getFinancialRecordById = async (id) => {

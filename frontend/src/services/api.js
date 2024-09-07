@@ -1,9 +1,10 @@
-import axios from "axios";
-const bestURL = import.meta.env.VITE_BASE_URL;
+import axios from 'axios';
+
 const instance = axios.create({
-  bestURL,
+  baseURL: import.meta.env.VITE_BASE_URL, 
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
+
 export default instance;
