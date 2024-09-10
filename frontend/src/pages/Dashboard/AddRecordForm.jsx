@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import { useFinancialRecords } from '../../contexts/financial.context';
+import { useUser } from '@clerk/clerk-react';
 
 const AddRecordForm = () => {
   const { addRecord } = useFinancialRecords();
+  const { user } = useUser(); // Fetch current user from Clerk
   const [formData, setFormData] = useState({
     userId: '',
     description: '',
@@ -13,6 +16,12 @@ const AddRecordForm = () => {
   });
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    if (user) {
+      setFormData((prevData) => ({ ...prevData, userId: user.id }));
+    }
+  }, [user]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -21,17 +30,31 @@ const AddRecordForm = () => {
   const handleAddRecord = async () => {
     try {
       await addRecord(formData);
+      // Display success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Record added successfully!',
+        confirmButtonText: 'OK'
+      });
       setFormData({
-        userId: '',
+        userId: user ? user.id : '', // Preserve userId if present
         description: '',
         date: '',
         amount: '',
         category: '',
         paymentMethod: ''
       });
-      setError(null); 
+      setError(null);
     } catch (error) {
       console.error('Error adding record:', error);
+      // Display error alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'An error occurred while adding the record. Please try again.',
+        confirmButtonText: 'OK'
+      });
       setError('An error occurred while adding the record. Please try again.');
     }
   };
@@ -42,7 +65,7 @@ const AddRecordForm = () => {
       
       {error && <p className="text-red-500 mb-4">{error}</p>}
       
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-1">User ID</label>
         <input
           type="text"
@@ -54,7 +77,7 @@ const AddRecordForm = () => {
           placeholder="Enter User ID"
           required
         />
-      </div>
+      </div> */}
   
       <div className="mb-4">
         <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -110,7 +133,7 @@ const AddRecordForm = () => {
           <option value="">Select Category</option>
           <option value="อาหาร">อาหาร</option>
           <option value="ขนมทานเล่น">ขนมทานเล่น</option>
-          <option value="น้ำดื่ม">น้ำดื่ม</option>
+          <option value="น้ำดื่ม">เครื่องดื่ม</option>
           <option value="ของใช้">ของใช้</option>
           <option value="เสื้อผ้า">เสื้อผ้า</option>
           <option value="เครื่องใช้ไฟฟ้า">เครื่องใช้ไฟฟ้า</option>

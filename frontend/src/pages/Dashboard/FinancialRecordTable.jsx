@@ -1,34 +1,59 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 import { useFinancialRecords } from '../../contexts/financial.context';
 
 const FinancialRecordTable = () => {
-  const { records, updateRecord, deleteRecord } = useFinancialRecords(); // เรียกใช้ context สำหรับจัดการ records
-  const [editRecord, setEditRecord] = useState(null); // state สำหรับเก็บข้อมูลที่กำลังแก้ไข
+  const { records, updateRecord, deleteRecord } = useFinancialRecords(); // Fetch context functions
+  const [editRecord, setEditRecord] = useState(null); // State to store the record being edited
 
-  // ฟังก์ชันเพื่อจัดการการแก้ไข
+  // Function to handle edit action
   const handleEdit = (record) => {
-    setEditRecord(record);
+    // Ensure the date is in the correct format for the date input
+    const formattedDate = record.date.slice(0, 10); // Assuming date is in ISO format YYYY-MM-DDTHH:MM:SSZ
+    setEditRecord({
+      ...record,
+      date: formattedDate
+    });
   };
 
-  // ฟังก์ชันจัดการการลบ
+  // Function to handle delete action with SweetAlert2 confirmation
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this record?')) {
-      deleteRecord(id);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteRecord(id);
+        Swal.fire(
+          'Deleted!',
+          'The record has been deleted.',
+          'success'
+        );
+      }
+    });
   };
 
-  // ฟังก์ชันบันทึกการแก้ไข
+  // Function to handle save edit with SweetAlert2 success message
   const handleSaveEdit = () => {
     if (editRecord) {
-      // อัปเดตรายการที่ถูกแก้ไขใน context และใน local records ทันที
-      updateRecord(editRecord.id, editRecord); // อัปเดตรายการใน context
-      setEditRecord(null); // ล้างฟอร์มแก้ไข
+      updateRecord(editRecord.id, editRecord); // Update record in context
+      Swal.fire(
+        'Updated!',
+        'The record has been updated.',
+        'success'
+      );
+      setEditRecord(null); // Clear the edit form
     }
   };
 
-  // ฟังก์ชันยกเลิกการแก้ไข
+  // Function to handle cancel edit
   const handleCancelEdit = () => {
-    setEditRecord(null); // ยกเลิกการแก้ไขโดยคืนค่า editRecord เป็น null
+    setEditRecord(null); // Reset edit state
   };
 
   return (
@@ -73,7 +98,7 @@ const FinancialRecordTable = () => {
         </tbody>
       </table>
 
-      {/* แสดงฟอร์มแก้ไขเมื่อมี record ที่กำลังถูกแก้ไข */}
+      {/* Show edit form if a record is being edited */}
       {editRecord && (
         <div className="bg-gray-50 p-4 rounded-lg shadow-lg mt-6">
           <h3 className="text-lg font-semibold mb-4 text-blue-800">Edit Record</h3>
