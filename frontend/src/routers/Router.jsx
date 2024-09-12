@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "../layouts/mainLayout";
+import MainLayout from "../layouts/MainLayout.jsx";
 import Home from "../pages/Home";
 import Dashboard from "../pages/Dashboard";
 import { FinancialRecordProvider } from "../contexts/financial.context.jsx";
