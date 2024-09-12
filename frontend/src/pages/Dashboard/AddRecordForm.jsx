@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
-import { useFinancialRecords } from '../../contexts/financial.context';
-import { useUser } from '@clerk/clerk-react';
+import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import { useFinancialRecords } from "../../contexts/financial.context";
+import { useUser } from "@clerk/clerk-react";
 
 const AddRecordForm = () => {
   const { addRecord } = useFinancialRecords();
-  const { user } = useUser(); // Fetch current user from Clerk
+  const { user } = useUser();
   const [formData, setFormData] = useState({
-    userId: '',
-    description: '',
-    date: '',
-    amount: '',
-    category: '',
-    paymentMethod: ''
+    userId: "",
+    description: "",
+    date: new Date().toISOString().split("T")[0],
+    amount: "",
+    category: "",
+    paymentMethod: "",
   });
   const [error, setError] = useState(null);
 
@@ -32,39 +32,41 @@ const AddRecordForm = () => {
       await addRecord(formData);
       // Display success alert
       Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: 'Record added successfully!',
-        confirmButtonText: 'OK'
+        icon: "success",
+        title: "Success!",
+        text: "Record added successfully!",
+        confirmButtonText: "OK",
       });
       setFormData({
-        userId: user ? user.id : '', // Preserve userId if present
-        description: '',
-        date: '',
-        amount: '',
-        category: '',
-        paymentMethod: ''
+        userId: user ? user.id : "",
+        description: "",
+        date: "",
+        amount: "",
+        category: "",
+        paymentMethod: "",
       });
       setError(null);
     } catch (error) {
-      console.error('Error adding record:', error);
-      // Display error alert
+      console.error("Error adding record:", error);
+
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'An error occurred while adding the record. Please try again.',
-        confirmButtonText: 'OK'
+        icon: "error",
+        title: "Oops...",
+        text: "An error occurred while adding the record. Please try again.",
+        confirmButtonText: "OK",
       });
-      setError('An error occurred while adding the record. Please try again.');
+      setError("An error occurred while adding the record. Please try again.");
     }
   };
 
   return (
     <div className="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 p-6 rounded-lg shadow-lg max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Add Financial Record</h2>
-      
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Add Financial Record
+      </h2>
+
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      
+
       {/* <div className="mb-4">
         <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-1">User ID</label>
         <input
@@ -78,9 +80,14 @@ const AddRecordForm = () => {
           required
         />
       </div> */}
-  
+
       <div className="mb-4">
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Description
+        </label>
         <input
           type="text"
           id="description"
@@ -92,9 +99,14 @@ const AddRecordForm = () => {
           required
         />
       </div>
-  
+
       <div className="mb-4">
-        <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+        <label
+          htmlFor="date"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Date
+        </label>
         <input
           type="date"
           id="date"
@@ -105,9 +117,14 @@ const AddRecordForm = () => {
           required
         />
       </div>
-  
+
       <div className="mb-4">
-        <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+        <label
+          htmlFor="amount"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Amount
+        </label>
         <input
           type="number"
           id="amount"
@@ -119,9 +136,14 @@ const AddRecordForm = () => {
           required
         />
       </div>
-  
+
       <div className="mb-4">
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+        <label
+          htmlFor="category"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Category
+        </label>
         <select
           id="category"
           name="category"
@@ -141,9 +163,14 @@ const AddRecordForm = () => {
           <option value="อื่นๆ">อื่นๆ</option>
         </select>
       </div>
-  
+
       <div className="mb-4">
-        <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+        <label
+          htmlFor="paymentMethod"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Payment Method
+        </label>
         <select
           id="paymentMethod"
           name="paymentMethod"
@@ -159,7 +186,7 @@ const AddRecordForm = () => {
           <option value="onlineBanking">Online Banking</option>
         </select>
       </div>
-  
+
       <button
         type="button"
         onClick={handleAddRecord}
